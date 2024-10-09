@@ -107,7 +107,7 @@ if DifficultyNumber == "1":
 elif DifficultyNumber == "2":
     BestTime = 65
 elif DifficultyNumber == "3":
-    BestTime = 120
+    BestTime = 85
 
 Points = 100 - (TotalTime - BestTime)/(BestTime * 2) * 100
 if Points > 100:
