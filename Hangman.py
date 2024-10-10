@@ -139,11 +139,31 @@ else:
     Player1[0] = input("Player 1: ").title()
     Player2[0] = input("Player 2: ").title()
 
+Reset()
+
+print("Enter the length of the match:")
+FirstTo = int(input("First to "))
+
+def EndGame():
+    if Player1[1] >= FirstTo:
+        Reset()
+        print(Player1[0] + ": " + str(Player1[1]))
+        print(Player2[0] + ": " + str(Player2[1]) + "\n")
+        print(Player1[0] + " wins the match!")
+        time.sleep(1000)
+    elif Player2[1] >= FirstTo:
+        Reset()
+        print(Player1[0] + ": " + str(Player1[1]))
+        print(Player2[0] + ": " + str(Player2[1]) + "\n")
+        print(Player2[0] + " wins the match!")
+        time.sleep(1000)
+
 if ModeNumber == "1":
     while True:
         Word = GetRandomWord()
         GuessWord(Word, Player1, Player2)
         time.sleep(2)
+        EndGame()
 elif ModeNumber == "2":
     while True:
         Reset()
@@ -156,3 +176,4 @@ elif ModeNumber == "2":
         Word = input()
         GuessWord(Word, Player1, Player2)
         time.sleep(2)
+        EndGame()
