@@ -9,7 +9,7 @@ def Reset():
     os.system("CLS")
     print(Colours.Normal + "-- Hangman --\n")
 
-Words = ["bikini", "puzzle", "jazz", "galaxy", "strength", "junior", "will", "torn", "bully", "employment"]
+Words = ["bikini", "puzzle", "jazz", "galaxy", "strength", "junior", "will", "torn", "bully", "employment", "undecided", "depression", "loyalty", "hamburger", "establishment", "retro", "aligned", "cup", "premade", "jumper", "explanation", "rhino", "wherever", "quieter", "wooly", "editor", "roman", "thought", "youth", "underscore", "ill", "operator", "philosophical", "amazed", "slicer", "demented", "frosty", "gigantic", "honorable", "jammed", "kit", "layer", "zebra", "xylophone", "chocolate", "vile", "boredom", "naughty", "monstrosity"]
 
 def GetRandomWord():
     RandomIndex = random.randint(0, len(Words) - 1)
