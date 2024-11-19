@@ -1,0 +1,22 @@
+import pygame
+from sys import exit
+
+pygame.init()
+Screen = pygame.display.set_mode((800, 400))
+pygame.display.set_caption("Screen")
+Clock = pygame.time.Clock()
+
+Surface = pygame.Surface((100, 200))
+Surface.fill("Red")
+
+while True:
+    
+    for CurrentEvent in pygame.event.get():
+        if CurrentEvent.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+    
+    Screen.blit(Surface, (200, 100))
+    
+    pygame.display.update()
+    Clock.tick(60)
