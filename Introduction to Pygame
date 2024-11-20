@@ -5,9 +5,11 @@ pygame.init()
 Screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption("Screen")
 Clock = pygame.time.Clock()
+Font = pygame.font.Font("font/Pixeltype.ttf", 50)
 
-Surface = pygame.Surface((100, 200))
-Surface.fill("Red")
+SkySurface = pygame.image.load("graphics/Sky.png")
+GroundSurface = pygame.image.load("graphics/ground.png")
+TextSurface = Font.render("GAME", False, "Black")
 
 while True:
     
@@ -16,7 +18,9 @@ while True:
             pygame.quit()
             exit()
     
-    Screen.blit(Surface, (200, 100))
+    Screen.blit(SkySurface, (0, 0))
+    Screen.blit(GroundSurface, (0, 300))
+    Screen.blit(TextSurface, (300, 50))
     
     pygame.display.update()
     Clock.tick(60)
