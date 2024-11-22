@@ -7,9 +7,15 @@ pygame.display.set_caption("Screen")
 Clock = pygame.time.Clock()
 Font = pygame.font.Font("font/Pixeltype.ttf", 50)
 
-SkySurface = pygame.image.load("graphics/Sky.png")
-GroundSurface = pygame.image.load("graphics/ground.png")
+SkySurface = pygame.image.load("graphics/Sky.png").convert()
+GroundSurface = pygame.image.load("graphics/ground.png").convert()
 TextSurface = Font.render("GAME", False, "Black")
+
+SnailSurface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+SnailRectangle = SnailSurface.get_rect(bottomright = (600, 300))
+
+PlayerSurface = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
+PlayerRectangle = PlayerSurface.get_rect(midbottom = (80, 300))
 
 while True:
     
@@ -21,6 +27,13 @@ while True:
     Screen.blit(SkySurface, (0, 0))
     Screen.blit(GroundSurface, (0, 300))
     Screen.blit(TextSurface, (300, 50))
+
+    SnailRectangle.x -= 4
+    if SnailRectangle.right <= 0:
+        SnailRectangle.left = 800
+
+    Screen.blit(SnailSurface, SnailRectangle)
+    Screen.blit(PlayerSurface, PlayerRectangle)
     
     pygame.display.update()
     Clock.tick(60)
