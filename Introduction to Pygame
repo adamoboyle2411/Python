@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+from random import randint
 
 pygame.init()
 Screen = pygame.display.set_mode((800, 400))
@@ -14,10 +15,45 @@ ScoreSurface = Font.render("GAME", False, "Black")
 ScoreRectangle = ScoreSurface.get_rect(center = (400, 50))
 
 SnailSurface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-SnailRectangle = SnailSurface.get_rect(bottomright = (600, 300))
+
+ObstacleRectangleList = []
 
 PlayerSurface = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
 PlayerRectangle = PlayerSurface.get_rect(midbottom = (80, 300))
+PlayerGravity = 0
+
+PlayerStand = pygame.image.load("graphics/player/player_stand.png").convert_alpha()
+PlayerStand = pygame.transform.rotozoom(PlayerStand, 0, 2)
+PlayerStandRectangle = PlayerStand.get_rect(center = (400, 200))
+
+GameName = Font.render("DONT STEP ON THE SNAIL", False, "Black")
+GameNameRectangle = GameName.get_rect(center = (400, 80))
+
+GameMessage = Font.render("Press space to retry", False, "Black")
+GameMessageRectangle = GameMessage.get_rect(center = (400, 350))
+
+ObstacleTimer = pygame.USEREVENT + 1
+pygame.time.set_timer(ObstacleTimer, 900)
+
+GameActive = True
+StartTime = 0
+Score = 0
+
+def DisplayScore():
+    CurrentTime = int(pygame.time.get_ticks() / 1000) - StartTime
+    ScoreSurface = Font.render(f'{CurrentTime}', False, "Black")
+    ScoreRectangle = ScoreSurface.get_rect(center = (400, 50))
+    Screen.blit(ScoreSurface, ScoreRectangle)
+    return CurrentTime
+
+def ObstacleMovement(ObstacleList):
+    if ObstacleList:
+        for ObstacleRectangle in ObstacleList:
+            ObstacleRectangle.x -= 5
+            Screen.blit(SnailSurface, ObstacleRectangle)
+        return ObstacleList
+    else:
+        return []
 
 while True:
     
@@ -25,28 +61,49 @@ while True:
         if CurrentEvent.type == pygame.QUIT:
             pygame.quit()
             exit()
-        #if CurrentEvent.type == pygame.MOUSEMOTION:
-        #    if PlayerRectangle.collidepoint(CurrentEvent.pos):
-        #        print("Collision")
+        elif GameActive and CurrentEvent.type == pygame.MOUSEBUTTONDOWN:
+            if PlayerRectangle.collidepoint(CurrentEvent.pos) and PlayerRectangle.bottom >= 300:
+                PlayerGravity = -20
+        elif GameActive and CurrentEvent.type == pygame.KEYDOWN:
+            if CurrentEvent.key == pygame.K_SPACE and PlayerRectangle.bottom >= 300:
+                PlayerGravity = -20
+        elif not GameActive and CurrentEvent.type == pygame.KEYDOWN:
+            if CurrentEvent.key == pygame.K_SPACE:
+                GameActive = True
+                StartTime = int(pygame.time.get_ticks() / 1000)
+        elif GameActive and CurrentEvent.type == ObstacleTimer:
+            ObstacleRectangleList.append(SnailSurface.get_rect(bottomright = (randint(900, 1100), 300)))
     
-    Screen.blit(SkySurface, (0, 0))
-    Screen.blit(GroundSurface, (0, 300))
-    pygame.draw.rect(Screen, "Pink", ScoreRectangle)
-    Screen.blit(ScoreSurface, ScoreRectangle)
-
-    SnailRectangle.x -= 4
-    if SnailRectangle.right <= 0:
-        SnailRectangle.left = 800
-
-    Screen.blit(SnailSurface, SnailRectangle)
-    Screen.blit(PlayerSurface, PlayerRectangle)
-
-    #if PlayerRectangle.colliderect(SnailRectangle):
-    #    print("collision")
+    if GameActive:
     
-    #MousePosition = pygame.mouse.get_pos()
-    #if PlayerRectangle.collidepoint(MousePosition):
-    #    print(pygame.mouse.get_pressed())
+        Screen.blit(SkySurface, (0, 0))
+        Screen.blit(GroundSurface, (0, 300))
+        Score = DisplayScore()
+    
+        PlayerGravity += 1
+        PlayerRectangle.y += PlayerGravity
+        if PlayerRectangle.bottom >= 300:
+            PlayerRectangle.bottom = 300
+
+        Screen.blit(PlayerSurface, PlayerRectangle)
+
+        ObstacleRectangleList = ObstacleMovement(ObstacleRectangleList)
+
+        #if SnailRectangle.colliderect(PlayerRectangle):
+        #    GameActive =  False
+
+    else:
+
+        Screen.fill("Red")
+        Screen.blit(PlayerStand, PlayerStandRectangle)
+        Screen.blit(GameName, GameNameRectangle)
+        Screen.blit(GameMessage, GameMessageRectangle)
+
+        ScoreMessage = Font.render(f"Your score: {Score}", False, "Black")
+        ScoreMessageRectangle = ScoreMessage.get_rect(center = (400, 310))
+        Screen.blit(ScoreMessage, ScoreMessageRectangle)
 
     pygame.display.update()
     Clock.tick(60)
+
+2:35
