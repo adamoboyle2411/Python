@@ -2,6 +2,40 @@ import pygame
 from sys import exit
 from random import randint
 
+class PlayerClass(pygame.sprite.Sprite):
+    def __init__(self):
+        super.__init__()
+        PlayerWalk1 = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
+        PlayerWalk2 = pygame.image.load("graphics/player/player_walk_2.png").convert_alpha()
+        self.PlayerWalkAnimation = [PlayerWalk1, PlayerWalk2]
+        self.PlayerIndex = 0
+        self.PlayerJump = pygame.image.load("graphics/player/jump.png").convert_alpha()
+        self.Image = self.PlayerWalk[self.PlayerIndex]
+        self.Rectangle = self.Image.get_rect(midbottom = (200, 300))
+        self.Gravity = 0
+    def PlayerInput(self):
+        Keys = pygame.key.get_pressed()
+        if Keys[pygame.K_SPACE] and self.Rectangle.bottom >= 300:
+            self.Gravity = -20
+    def ApplyGravity(self):
+        self.Gravity += 1
+        self.Rectangle.y += self.Gravity
+        if self.Rectangle.bottom >= 300:
+            self.Rectangle.bottom = 300
+    def AnimationState(self):
+        if self.Rectangle.bottom < 300:
+            self.Image = self.PlayerJump
+        else:
+            self.PlayerIndex += 0.1
+            if self.PlayerIndex > len(self.PlayerWalkAnimation):
+                PlayerIndex = 0
+            self.Image = PlayerWalk[int(self.PlayerIndex)]
+    def Update(self):
+        self.PlayerInput()
+        self.ApplyGravity()
+        self.AnimationState()
+
+
 pygame.init()
 Screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption("Screen")
@@ -14,13 +48,22 @@ GroundSurface = pygame.image.load("graphics/ground.png").convert()
 ScoreSurface = Font.render("GAME", False, "Black")
 ScoreRectangle = ScoreSurface.get_rect(center = (400, 50))
 
-SnailSurface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+Player = pygame.sprite.GroupSingle()
+Player.add(PlayerClass())
+
+SnailFrame1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+SnailFrame2 = pygame.image.load("graphics/snail/snail2.png").convert_alpha()
+SnailAnimation = [SnailFrame1, SnailFrame2]
+SnailIndex = 0
+SnailSurface = SnailAnimation[SnailIndex]
+
+FlySurface = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
+FlyFrame2 = pygame.image.load("graphics/fly/fly2.png").convert_alpha()
+FlyAnimation = [FlyFrame1, FlyFrame2]
+FlyIndex = 0
+FlySurface = FlyAnimation[FlyIndex]
 
 ObstacleRectangleList = []
-
-PlayerSurface = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
-PlayerRectangle = PlayerSurface.get_rect(midbottom = (80, 300))
-PlayerGravity = 0
 
 PlayerStand = pygame.image.load("graphics/player/player_stand.png").convert_alpha()
 PlayerStand = pygame.transform.rotozoom(PlayerStand, 0, 2)
@@ -33,7 +76,13 @@ GameMessage = Font.render("Press space to retry", False, "Black")
 GameMessageRectangle = GameMessage.get_rect(center = (400, 350))
 
 ObstacleTimer = pygame.USEREVENT + 1
-pygame.time.set_timer(ObstacleTimer, 900)
+pygame.time.set_timer(ObstacleTimer, 1500)
+
+SnailAnimationTimer = pygame.USEREVENT + 2
+pygame.time.set_timer(SnailAnimationTimer, 500)
+
+FlyAnimationTimer = pygame.USEREVENT + 3
+pygame.time.set_timer(FlyAnimationTimer, 200)
 
 GameActive = True
 StartTime = 0
@@ -50,10 +99,21 @@ def ObstacleMovement(ObstacleList):
     if ObstacleList:
         for ObstacleRectangle in ObstacleList:
             ObstacleRectangle.x -= 5
-            Screen.blit(SnailSurface, ObstacleRectangle)
+            if ObstacleRectangle.bottom == 300:
+                Screen.blit(SnailSurface, ObstacleRectangle)
+            else:
+                Screen.blit(FlySurface, ObstacleRectangle)
+        ObstacleList = [Obstacle for Obstacle in ObstacleList if Obstacle.x > -100
         return ObstacleList
     else:
         return []
+
+def Collisions(Player, ObstacleList):
+    if ObstacleList:
+        for ObstacleRectangle in ObstacleList:
+            if Player.colliderect(ObstacleRectangle):
+                return False
+    return True
 
 while True:
     
@@ -72,7 +132,22 @@ while True:
                 GameActive = True
                 StartTime = int(pygame.time.get_ticks() / 1000)
         elif GameActive and CurrentEvent.type == ObstacleTimer:
-            ObstacleRectangleList.append(SnailSurface.get_rect(bottomright = (randint(900, 1100), 300)))
+            if randint(0,2):
+                ObstacleRectangleList.append(SnailSurface.get_rect(bottomright = (randint(900, 1100), 300)))
+            else:
+                ObstacleRectangleList.append(FlySurface.get_rect(bottomright = (randint(900, 1100), 210)))
+        elif GameActive and CurrentEvent.type == SnailAnimationTimer:
+            if SnailIndex == 0:
+                SnailIndex = 1
+            else:
+                SnailIndex = 0
+            SnailSurface = SnailAnimation[SnailIndex]
+        elif GameActive and CurrentEvent.type == FlyAnimationTimer:
+            if FlyIndex == 0:
+                FlyIndex = 1
+            else:
+                FlyIndex = 0
+            FlySurface = FlyAnimation[FlyIndex]
     
     if GameActive:
     
@@ -85,12 +160,14 @@ while True:
         if PlayerRectangle.bottom >= 300:
             PlayerRectangle.bottom = 300
 
+        AnimatePlayer()
         Screen.blit(PlayerSurface, PlayerRectangle)
+        Player.draw(Screen)
+        Player.Update()
 
         ObstacleRectangleList = ObstacleMovement(ObstacleRectangleList)
 
-        #if SnailRectangle.colliderect(PlayerRectangle):
-        #    GameActive =  False
+        GameActive = Collisions(PlayerRectangle, ObstacleRectangleList)
 
     else:
 
@@ -99,6 +176,10 @@ while True:
         Screen.blit(GameName, GameNameRectangle)
         Screen.blit(GameMessage, GameMessageRectangle)
 
+        ObstacleRectangleList.clear()
+        PlayerRectangle.midbottom = (80, 300)
+        PlayerGravity = 0
+
         ScoreMessage = Font.render(f"Your score: {Score}", False, "Black")
         ScoreMessageRectangle = ScoreMessage.get_rect(center = (400, 310))
         Screen.blit(ScoreMessage, ScoreMessageRectangle)
@@ -106,4 +187,4 @@ while True:
     pygame.display.update()
     Clock.tick(60)
 
-2:35
+3:25
