@@ -10,29 +10,30 @@ class PlayerClass(pygame.sprite.Sprite):
 		Self.PlayerWalk = [PlayerWalk1, PlayerWalk2]
 		Self.PlayerIndex = 0
 		Self.PlayerJump = pygame.image.load("graphics/player/jump.png").convert_alpha()
-		Self.Image = Self.PlayerWalk[Self.PlayerIndex]
-		Self.Rectangle = Self.Image.get_rect(midbottom = (80, 300))
+		Self.image = Self.PlayerWalk[Self.PlayerIndex]
+		Self.rect = Self.image.get_rect(midbottom = (80, 300))
 		Self.Gravity = 0
 		Self.JumpSound = pygame.mixer.Sound("audio/jump.mp3")
 		Self.JumpSound.set_volume(0.5)
 	def PlayerInput(Self):
 		Keys = pygame.key.get_pressed()
-		if Keys[pygame.K_SPACE] and Self.Rectangle.bottom >= 300:
+		if Keys[pygame.K_SPACE] and Self.rect.bottom >= 300:
 			Self.Gravity = -20
 			Self.JumpSound.play()
 	def ApplyGravity(Self):
 		Self.Gravity += 1
-		Self.Rectangle.y += Self.Gravity
-		if Self.Rectangle.bottom >= 300:
-			Self.Rectangle.bottom = 300
+		Self.rect.y += Self.Gravity
+		if Self.rect.bottom >= 300:
+			Self.rect.bottom = 300
 	def AnimationState(Self):
-		if Self.Rectangle.bottom < 300: 
-			Self.Image = Self.PlayerJump
+		if Self.rect.bottom < 300: 
+			Self.image = Self.PlayerJump
 		else:
 			Self.PlayerIndex += 0.1
-			if Self.PlayerIndex >= len(Self.PlayerWalk):Self.PlayerIndex = 0
-			Self.Image = Self.PlayerWalk[int(Self.PlayerIndex)]
-	def Update(Self):
+			if Self.PlayerIndex >= len(Self.PlayerWalk):
+				Self.PlayerIndex = 0
+			Self.image = Self.PlayerWalk[int(Self.PlayerIndex)]
+	def update(Self):
 		Self.PlayerInput()
 		Self.ApplyGravity()
 		Self.AnimationState()
@@ -40,10 +41,10 @@ class PlayerClass(pygame.sprite.Sprite):
 class ObstacleClass(pygame.sprite.Sprite):
 	def __init__(Self, Type):
 		super().__init__()
-		if Type == 'Fly':
+		if Type == "Fly":
 			Fly1 = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
 			Fly2 = pygame.image.load("graphics/fly/fly2.png").convert_alpha()
-			Self.Animaion = [Fly1, Fly2]
+			Self.Animation = [Fly1, Fly2]
 			YPosition = 210
 		else:
 			Snail1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
@@ -51,29 +52,30 @@ class ObstacleClass(pygame.sprite.Sprite):
 			Self.Animation = [Snail1, Snail2]
 			YPosition = 300
 		Self.AnimationIndex = 0
-		Self.Image = Self.Animation[Self.AnimationIndex]
-		Self.Rectangle = Self.Image.get_rect(midbottom = (randint(900, 1100), YPosition))
+		Self.image = Self.Animation[Self.AnimationIndex]
+		Self.rect = Self.image.get_rect(midbottom = (randint(900, 1100), YPosition))
 	def AnimationState(Self):
 		Self.AnimationIndex += 0.1 
-		if Self.AnimationIndex >= len(Self.Animation): Self.AnimationIndex = 0
-		Self.Image = Self.Animation[int(Self.AnimationIndex)]
+		if Self.AnimationIndex >= len(Self.Animation):
+			Self.AnimationIndex = 0
+		Self.image = Self.Animation[int(Self.AnimationIndex)]
 	def Destroy(Self):
-		if Self.Rectangle.x <= -100: 
+		if Self.rect.x <= -100: 
 			Self.kill()
-	def Update(Self):
+	def update(Self):
 		Self.AnimationState()
-		Self.Rectangle.x -= 6
+		Self.rect.x -= 6
 		Self.Destroy()
 
 def DisplayScore():
 	CurrentTime = int(pygame.time.get_ticks() / 1000) - StartTime
-	ScoreSurface = test_font.render(f"Score: {CurrentTime}", False, (64,64,64))
+	ScoreSurface = Font.render(f"Score: {CurrentTime}", False, "Black")
 	ScoreRectangle = ScoreSurface.get_rect(center = (400, 50))
 	Screen.blit(ScoreSurface, ScoreRectangle)
 	return CurrentTime
 
 def CollisionSprite():
-	if pygame.sprite.spritecollide(player.sprite, ObstacleGroup, False):
+	if pygame.sprite.spritecollide(Player.sprite, ObstacleGroup, False):
 		ObstacleGroup.empty()
 		return False
 	else:
@@ -102,14 +104,16 @@ EndPlayer = pygame.image.load("graphics/player/player_stand.png").convert_alpha(
 EndPlayer = pygame.transform.rotozoom(EndPlayer, 0, 2)
 EndPlayerRectangle = EndPlayer.get_rect(center = (400, 200))
 
-GameName = Font.render("GAME", False, (111, 196, 169))
+GameName = Font.render("GAME", False, "Black")
 GameNameRectangle = GameName.get_rect(center = (400, 80))
 
-GameMessage = Font.render("Press space to play again", False, (111,196,169))
-GameMessageRectangle = GameMessage.get_rect(center = (400, 350))
+GameMessage1 = Font.render("Press space to play", False, "Black")
+GameMessageRectangle1 = GameMessage1.get_rect(center = (400, 330))
+GameMessage2 = Font.render("Press space to play again", False, "Black")
+GameMessageRectangle2 = GameMessage2.get_rect(center = (400, 360))
 
 ObstacleTimer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer,1500)
+pygame.time.set_timer(ObstacleTimer, 1500)
 
 while True:
 
@@ -117,9 +121,9 @@ while True:
 		if CurrentEvent.type == pygame.QUIT:
 			pygame.quit()
 			exit()
-		elseif GameActive and CurrentEvent.type == ObstacleTimer:
+		elif GameActive and CurrentEvent.type == ObstacleTimer:
 			ObstacleGroup.add(ObstacleClass(choice(["Fly", "Snail", "Snail", "Snail"])))
-		elseif not GameActive:
+		elif not GameActive:
 			if CurrentEvent.type == pygame.KEYDOWN and CurrentEvent.key == pygame.K_SPACE:
 				GameActive = True
 				StartTime = int(pygame.time.get_ticks() / 1000)
@@ -131,24 +135,27 @@ while True:
 		Score = DisplayScore()
 		
 		Player.draw(Screen)
-		Player.Update()
+		Player.update()
 
 		ObstacleGroup.draw(Screen)
-		ObstacleGroup.Update()
+		ObstacleGroup.update()
 
 		GameActive = CollisionSprite()
 		
 	else:
 
-		Screen.fill((94, 129, 162))
+		Screen.fill("Dark Green")
 		Screen.blit(EndPlayer, EndPlayerRectangle)
 
-		ScoreMessage = Font.render(f"Your score: {Score}", False, (111, 196, 169))
-		ScoreMessageRectangle = ScoreMessage.get_rect(center = (400, 320))
+		ScoreMessage = Font.render(f"Your score: {Score}", False, "Black")
+		ScoreMessageRectangle = ScoreMessage.get_rect(center = (400, 310))
 
 		Screen.blit(GameName, GameNameRectangle)
-		Screen.blit(ScoreMessage, ScoreMessageRectangle)
-		Screen.blit(GameMessage, GameMessageRectangle)
+		if Score == 0:
+			Screen.blit(GameMessage1, GameMessageRectangle1)
+		else:
+			Screen.blit(ScoreMessage, ScoreMessageRectangle)
+			Screen.blit(GameMessage2, GameMessageRectangle2)
 
 	pygame.display.update()
 	Clock.tick(60)
