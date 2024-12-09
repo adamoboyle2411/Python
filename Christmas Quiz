@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Christmas Quiz</title>
+        <script>
+            var Answers = ["B"];
+            function GetCheckedValue(RadioName){
+                var Radios = document.getElementsByName(RadioName);
+                for (var Index = 0; Index < Radios.length; Index++)
+                if (Radios[Index].checked){
+                    return Radios[Index].value;
+                }
+            }
+            function GetScore(){
+                var Score = 0;
+                for (var Index = 0; Index < Answers.length; Index++)
+                if (GetCheckedValue("Question" + Index) == Answers[Index]){
+                    Score += 1;
+                }
+                return Score
+            }
+            function ReturnScore(){
+                alert("Your score is " + GetScore() + "/" + Answers.length)
+                document.getElementById("Results").innerHTML = "Your score is " + GetScore() + "/" + Answers.length;
+            }
+        </script>
+    </head>
+    <body>
+        <ul>
+            <li>
+                <h4>How many letters are there in "JS"?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question0" value = "A" />
+                            <span>1</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question0" value = "B" />
+                            <span>2</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question0" value = "C" />
+                            <span>3</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question0" value = "D" />
+                            <span>4</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <button onclick = "ReturnScore()">View Results</button>
+        <span id = "Results"></span>
+    </body>
+</html>
