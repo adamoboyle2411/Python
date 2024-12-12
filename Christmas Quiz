@@ -2,7 +2,7 @@
     <head>
         <title>Christmas Quiz</title>
         <script>
-            var Answers = ["C", "A"];
+            var Answers = ["B", "A", "C", "D", "A", "D", "B", "C"];
             function GetCheckedValue(RadioName){
                 var Radios = document.getElementsByName(RadioName);
                 for (var Index = 0; Index < Radios.length; Index++)
@@ -15,6 +15,10 @@
                 for (var Index = 0; Index < Answers.length; Index++)
                 if (GetCheckedValue("Question" + Index) == Answers[Index]){
                     Score += 1;
+                    document.getElementById("Answer" + Index).style.color = "lightgreen";
+                }
+                else{
+                    document.getElementById("Answer" + Index).style.color = "red";
                 }
                 return Score
             }
@@ -24,42 +28,47 @@
         </script>
     </head>
     <body>
+        <div style = "background-color: darkred; color: white">
+        <br><br>
+        <h1 style = "text-align: center; font-size: xxx-large;">- Christmas Quiz -</h1>
+        <br>
         <ul>
             <li>
-                <h4>Which of these is not one of Santa Claus' reindeer?</h4>
+                <h4>What day of the year is Christmas celebrated?</h4>
                 <ul>
                     <li>
                         <label>
                             <input type  = "radio" name = "Question0" value = "A" />
-                            <span>Cupid</span>
+                            <span>December 24</span>
                         </label>
                     </li>
                     <li>
                         <label>
                             <input type  = "radio" name = "Question0" value = "B" />
-                            <span>Rudolph</span>
+                            <span id = "Answer0">December 25</span>
                         </label>
                     </li>
                     <li>
                         <label>
                             <input type  = "radio" name = "Question0" value = "C" />
-                            <span>Olive</span>
+                            <span>December 26</span>
                         </label>
                     </li>
                     <li>
                         <label>
                             <input type  = "radio" name = "Question0" value = "D" />
-                            <span>Blitzen</span>
+                            <span>December 27</span>
                         </label>
                     </li>
                 </ul>
+            </li>
             <li>
                 <h4>Which British monarch popularised Christmas trees?</h4>
                 <ul>
                     <li>
                         <label>
                             <input type  = "radio" name = "Question1" value = "A" />
-                            <span>Queen Victora</span>
+                            <span id = "Answer1">Queen Victoria</span>
                         </label>
                     </li>
                     <li>
@@ -82,8 +91,183 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <h4>Which of these is not one of Santa Claus' reindeer?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question2" value = "A" />
+                            <span>Cupid</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question2" value = "B" />
+                            <span>Prancer</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question2" value = "C" />
+                            <span id = "Answer2">Olive</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question2" value = "D" />
+                            <span>Blitzen</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h4>Which Saint is Santa Claus based on?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question3" value = "A" />
+                            <span>Saint George</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question3" value = "B" />
+                            <span>Saint Patrick</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question3" value = "C" />
+                            <span>Saint John</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question3" value = "D" />
+                            <span id = "Answer3">Saint Nicholas</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h4>What colour is Rudolph's nose?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question4" value = "A" />
+                            <span id = "Answer4">Red</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question4" value = "B" />
+                            <span>White</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question4" value = "C" />
+                            <span>Blue</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question4" value = "D" />
+                            <span>Black</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h4>What is the French word for Christmas?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question5" value = "A" />
+                            <span>Paques</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question5" value = "B" />
+                            <span>Navidad</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question5" value = "C" />
+                            <span>Eglise</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question5" value = "D" />
+                            <span id = "Answer5">Noel</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h4>Which Christmas song is sang by Mariah Carey?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question6" value = "A" />
+                            <span>Last Christmas</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question6" value = "B" />
+                            <span id = "Answer6">All I Want For Christmas Is You</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question6" value = "C" />
+                            <span>Rocking Around the Christmas Tree</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question6" value = "D" />
+                            <span>Merry Christmas Everyone</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h4>Which Christmas film stars Will Ferrell?</h4>
+                <ul>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question7" value = "A" />
+                            <span>Home Alone</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question7" value = "B" />
+                            <span>How the Grinch Stole Christmas</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question7" value = "C" />
+                            <span id = "Answer7">Elf</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type  = "radio" name = "Question7" value = "D" />
+                            <span>Get Santa</span>
+                        </label>
+                    </li>
+                </ul>
+            </li>
         </ul>
-        <button onclick = "ReturnScore()">View Results</button>
+        <button onclick = ReturnScore()>View Results</button>
         <span id = "Results"></span>
+        </div>
     </body>
 </html>
