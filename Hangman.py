@@ -171,6 +171,7 @@ elif ModeNumber == "2":
         Word = input()
         GuessWord(Word, Player2, Player1)
         time.sleep(2)
+        EndGame()
         Reset()
         print("Enter a word for " + Player1[0] + " to guess:\n")
         Word = input()
