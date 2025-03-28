@@ -92,7 +92,7 @@ while True:
                     Number1 = Number3
         Guess = input(Colours.Normal + str(Number1) + " " + Symbol + " " + str(Number2) + " = ")
         while not Guess.isdigit():
-            Reset()
+            Reset(str(Index + 1) + "/20")
             Guess = input(Colours.Normal + str(Number1) + " " + Symbol + " " + str(Number2) + " = ")
         if Guess == str(int(Answer)):
             print(Colours.Correct + "Correct!")
