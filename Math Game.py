@@ -65,8 +65,10 @@ while True:
     StartTime = time.time()
     
     Score = 0
+
+    Count = 1
     
-    for Index in range(20):
+    while Count <= 20:
         Reset(str(Index + 1) + "/20")
         Question = ""
         Symbol, NumRange, AnsRange = GetRandomSymbol()
@@ -91,13 +93,15 @@ while True:
                     Number2 = Number1
                     Number1 = Number3
         Guess = input(Colours.Normal + str(Number1) + " " + Symbol + " " + str(Number2) + " = ")
-        if Guess == str(int(Answer)):
+        if Guess.isdigit() and Guess == str(int(Answer)):
             print(Colours.Correct + "Correct!")
             Score += 1
             time.sleep(1)
-        else:
+            Count += 1
+        elif Guess.isdigit():
             print(Colours.Incorrect + "Incorrect!\nThe correct answer is " + str(int(Answer)))
             time.sleep(2)
+            Count += 1
     
     Reset("")
     
