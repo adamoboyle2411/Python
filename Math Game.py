@@ -34,6 +34,13 @@ def GetRandomSymbol():
     RandomIndex = random.randint(0, len(Symbols) - 1)
     return Symbols[RandomIndex], NumberRange[RandomIndex], AnswerRange[RandomIndex]
 
+def IsNumber(String):
+    try:
+        Value = int(String)
+        return True
+    except ValueError:
+        return False
+
 while True:
     
     Reset("")
@@ -91,7 +98,7 @@ while True:
                     Number2 = Number1
                     Number1 = Number3
         Guess = input(Colours.Normal + str(Number1) + " " + Symbol + " " + str(Number2) + " = ")
-        while not Guess.isdigit():
+        while not IsNumber(Guess):
             Reset(str(Index + 1) + "/20")
             Guess = input(Colours.Normal + str(Number1) + " " + Symbol + " " + str(Number2) + " = ")
         if Guess == str(int(Answer)):
